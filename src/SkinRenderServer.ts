@@ -48,6 +48,7 @@ export default class SkinRenderServer {
 				if (!/^https{0,1}:\/\/.+$/.test(url)) {
 					res.statusCode = 400;
 					res.set("x-error", "The provided url has an invalid format");
+					res.set('Cache-Control', `public, max-age=3600`);
 					res.send(await this.createErrorImage(resolution));
 					return;
 				}
@@ -56,6 +57,7 @@ export default class SkinRenderServer {
 				if (!imageResponse.headers['content-type'].startsWith('image/')) {
 					res.statusCode = 400;
 					res.set("x-error", "URL Does not contain a valid image");
+					res.set('Cache-Control', `public, max-age=3600`);
 					res.send(await this.createErrorImage(resolution))
 					return
 				}
@@ -66,16 +68,19 @@ export default class SkinRenderServer {
 				if (metadata.width === 64 && (metadata.height === 64 || metadata.height === 32)) {
 					const isSlim = metadata.height === 64;
 					const manipulatedImageBuffer = await this.manipulateImage(imageResponse.data, 8, 8, 8, 8, isSlim, 40, 8, 8, 8, resolution)
+					res.set('Cache-Control', `public, max-age=3600`);
 					return res.send(manipulatedImageBuffer)
 				} else {
 					res.statusCode = 400;
 					res.set("x-error", "Image is not a valid skin");
+					res.set('Cache-Control', `public, max-age=3600`);
 					res.send(await this.createErrorImage(resolution))
 					return;
 				}
 			} catch (error) {
 				res.statusCode = 400;
 				res.set("x-error", "Invalid URL");
+				res.set('Cache-Control', `public, max-age=3600`);
 				res.send(await this.createErrorImage(resolution))
 				return;
 			}
