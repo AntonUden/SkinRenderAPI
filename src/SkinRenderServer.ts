@@ -106,7 +106,6 @@ export default class SkinRenderServer {
 
 		let result = baseImage;
 		if (isSlim) {
-			console.log("Composite top layer");
 			const part2 = await image.clone().extract({ left: x2, top: y2, width: width2, height: height2 }).resize(null, resolution, {
 				kernel: kernel.nearest
 			}).toBuffer()
