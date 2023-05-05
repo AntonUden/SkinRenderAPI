@@ -20,7 +20,7 @@ export default class SkinRenderServer {
 
 		this.http = new HTTP.Server(this.express);
 
-		this.express.get("/from_image/face/", async (req: Express.Request, res: Express.Response) => {
+		this.express.get(["/from_image/face/*", "/from_image/face"], async (req: Express.Request, res: Express.Response) => {
 			let resolution: number = 64;
 
 			if (req.query.resolution != null) {
@@ -40,7 +40,6 @@ export default class SkinRenderServer {
 
 			try {
 				const url: string = "" + req.query.url;
-
 				res.setHeader('Content-Type', 'image/png');
 
 				console.log("Request with url: " + url);
