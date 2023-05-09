@@ -52,7 +52,10 @@ export default class SkinRenderServer {
 					return;
 				}
 
-				const imageResponse = await axios.get(url, { responseType: 'arraybuffer' })
+				const imageResponse = await axios.get(url, {
+					responseType: 'arraybuffer',
+					maxContentLength: 4 * 1024 * 1024 // 4MB
+				})
 				if (!imageResponse.headers['content-type'].startsWith('image/')) {
 					res.statusCode = 400;
 					res.set("x-error", "URL Does not contain a valid image");
@@ -78,7 +81,7 @@ export default class SkinRenderServer {
 				}
 			} catch (error) {
 				res.statusCode = 400;
-				res.set("x-error", "Invalid URL");
+				res.set("x-error", "Invalid URL or File size too large");
 				res.set('Cache-Control', `public, max-age=3600`);
 				res.send(await this.createErrorImage(resolution))
 				return;
